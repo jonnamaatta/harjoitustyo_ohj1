@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "harjoitustyo", "harjoitustyo\harjoitustyo.csproj", "{B7B704B7-8A66-48B1-A843-657AC739FE3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fysiikkapeli1", "Fysiikkapeli1\Fysiikkapeli1.csproj", "{8ED3A5C5-0DF7-4A50-BA83-6BC531E17C43}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7B704B7-8A66-48B1-A843-657AC739FE3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7B704B7-8A66-48B1-A843-657AC739FE3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7B704B7-8A66-48B1-A843-657AC739FE3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7B704B7-8A66-48B1-A843-657AC739FE3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ED3A5C5-0DF7-4A50-BA83-6BC531E17C43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED3A5C5-0DF7-4A50-BA83-6BC531E17C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED3A5C5-0DF7-4A50-BA83-6BC531E17C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED3A5C5-0DF7-4A50-BA83-6BC531E17C43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {4FB99288-18FC-4B0B-BA4F-1EDAC2047A8D}
+		SolutionGuid = {4803C0C7-234B-4354-8AD0-5D4A2A2AE3A8}
 	EndGlobalSection
 EndGlobal

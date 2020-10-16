@@ -21,6 +21,8 @@ public class Tasohyppelypeli1 : PhysicsGame
     public override void Begin()
     {
         Gravity = new Vector(0, -1000);
+        Surface alaReuna = Surface.CreateBottom(Level, 30, 100, 40, 10);
+        Add(alaReuna);
 
         LuoKentta();
         LisaaNappaimet();
