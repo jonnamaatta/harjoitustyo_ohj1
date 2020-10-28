@@ -17,8 +17,7 @@ using Microsoft.Xna.Framework.Graphics;
 public class Fysiikkapeli1 : PhysicsGame
 {
     private PlatformCharacter pelaaja;
-    private PhysicsObject aita;
-    private PhysicsObject zombi;
+    private PhysicsObject este;
     private PhysicsObject taso;
     private const double HYPPYNOPEUS = 850;
     public override void Begin()
@@ -26,8 +25,7 @@ public class Fysiikkapeli1 : PhysicsGame
         Gravity = new Vector(0, -1000);
         LuoKentta();
         LisaaPelaaja();
-        LisaaAidat();
-        LisaaZombit();
+        LisaaEste();
         LisaaNappaimet();
         Camera.Follow(pelaaja);
         Camera.StayInLevel = true;
@@ -52,8 +50,7 @@ public class Fysiikkapeli1 : PhysicsGame
         pelaaja.Shape = Shape.Circle;
         pelaaja.Restitution = 1.0;
         Add(pelaaja);
-        AddCollisionHandler(pelaaja, "muuri", PelaajaOsuuAitaan);
-        AddCollisionHandler(pelaaja, "pahis", PelaajaOsuuZombiin);
+        AddCollisionHandler(pelaaja, "vihu", PelaajaOsuu);
     }
 
     /// <summary>
@@ -70,36 +67,25 @@ public class Fysiikkapeli1 : PhysicsGame
         Add(taso);
     }
 
-    private void LisaaAidat()
+    private void LisaaEste()
     {
+        Image[] kuvat = new Image[2];
+        kuvat[0] = LoadImage("aita");
+        kuvat[1] = LoadImage("zombi");
+        
         for (int i = 0; i < 1000; i+=2)
         {
-            aita = new PhysicsObject(40, 100);
-            aita.X = RandomGen.NextDouble(600*i,600*(i+1));
-            aita.Y = -150;
-            aita.IgnoresPhysicsLogics = true;
-            aita.Shape = Shape.Rectangle;
-            aita.Image = LoadImage("aita");
-            aita.Mass = 1000;
-            aita.Tag = "muuri";
-            Add(aita);
-            aita.MoveTo(new Vector(-800, -150), 200);
-        }
-    }
-
-    private void LisaaZombit()
-    {
-        for (int i = 1; i < 1000; i += 2)
-        {
-            zombi = new PhysicsObject(30, 80);
-            zombi.X = RandomGen.NextDouble(aita.Y + 900*i, aita.Y + 900 * (i+1));
-            zombi.Y = -160;
-            zombi.IgnoresPhysicsLogics = true;
-            zombi.Shape = Shape.Rectangle;
-            zombi.Mass = 1000;
-            zombi.Tag = "pahis";
-            Add(zombi);
-            zombi.MoveTo(new Vector(-800, -160), 200);
+            este = new PhysicsObject(40, 100);
+            este.X = RandomGen.NextDouble(600*i,600*(i+1));
+            este.Y = -150;
+            este.IgnoresPhysicsLogics = true;
+            este.Shape = Shape.Rectangle;
+            int n = RandomGen.NextInt(kuvat.Length);
+            este.Image = kuvat[n];
+            este.Mass = 1000;
+            este.Tag = "vihu";
+            Add(este);
+            este.MoveTo(new Vector(-800, -150), 200);
         }
     }
 
@@ -116,18 +102,13 @@ public class Fysiikkapeli1 : PhysicsGame
         pelaaja.Jump(nopeus);
     }
 
-    private void PelaajaOsuuAitaan(PhysicsObject pelaaja, PhysicsObject aita)
+    private void PelaajaOsuu(PhysicsObject pelaaja, PhysicsObject este)
     {
        pelaaja.Destroy();
-       MessageDisplay.Add("Hävisit pelin! Et päässyt aidan yli ja zombi sai napattua sinut.");
+       MessageDisplay.Add("Hävisit pelin!");
     }
 
-    private void PelaajaOsuuZombiin(PhysicsObject pelaaja, PhysicsObject zombi)
-    {
-        pelaaja.Destroy();
-        MessageDisplay.Add("Hävisit pelin! Muutuit zombiksi.");
-    }
-
+  
     // private void LisaaNopeutta()
     //{
 
