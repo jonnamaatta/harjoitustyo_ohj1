@@ -16,24 +16,29 @@ using Microsoft.Xna.Framework.Graphics;
 
 public class Fysiikkapeli1 : PhysicsGame
 {
-    private PlatformCharacter pelaaja;
-    private PhysicsObject este;
-    private PhysicsObject taso;
-    private const double HYPPYNOPEUS = 850;
+    private const double HYPPYNOPEUS = 800;
     public override void Begin()
+    {
+        MultiSelectWindow alkuValikko = new MultiSelectWindow("Apocalypse Run",
+        "Aloita peli", "Lopeta peli");
+        Add(alkuValikko);
+        alkuValikko.AddItemHandler(0, AloitaPeli);
+        alkuValikko.AddItemHandler(1, Exit);
+    }
+
+    private void AloitaPeli()
     {
         Gravity = new Vector(0, -1000);
         LuoKentta();
         LisaaPelaaja();
         LisaaEste();
         LisaaNappaimet();
-        Camera.Follow(pelaaja);
         Camera.StayInLevel = true;
-       // Timer ajastin = new Timer();
-       // ajastin.Interval = 1.5;
-       // ajastin.Timeout += LisaaNopeutta;
-       //  ajastin.Start();
     }
+
+    /// <summary>
+    /// Luodaan kenttä.
+    /// </summary>
     private void LuoKentta()
     {
         Surface alaReuna = Surface.CreateBottom(Level);
@@ -42,15 +47,19 @@ public class Fysiikkapeli1 : PhysicsGame
         Level.Background.CreateGradient(Color.Wheat, Color.DarkOrange);
     }
 
+    /// <summary>
+    /// Luodaan ohjattava pelaaja.
+    /// </summary>
     private void LisaaPelaaja()
     {
-        pelaaja = new PlatformCharacter(50, 50);
+        PlatformCharacter pelaaja = new PlatformCharacter(50, 50);
         pelaaja.X = -250;
         pelaaja.Y = -150;
         pelaaja.Shape = Shape.Circle;
         pelaaja.Restitution = 1.0;
         Add(pelaaja);
         AddCollisionHandler(pelaaja, "vihu", PelaajaOsuu);
+        Keyboard.Listen(Key.Up, ButtonState.Pressed, Hyppaa, "Pelaaja hyppää", pelaaja, HYPPYNOPEUS);
     }
 
     /// <summary>
@@ -60,22 +69,26 @@ public class Fysiikkapeli1 : PhysicsGame
     /// <param name="y">Tason sijainti pystysuunnassa.</param>
     private void LisaaTaso(double x, double y)
     {
-        taso = PhysicsObject.CreateStaticObject(Screen.Width, 400);
+        PhysicsObject taso = PhysicsObject.CreateStaticObject(Screen.Width, 400);
         taso.Color = Color.DarkOrange;
         taso.X = x;
         taso.Y = y;
         Add(taso);
     }
 
+    /// <summary>
+    /// Luodaan esteitä, jonka päältä pelaaja hyppii. Spawnataan joko zombi tai aita.
+    /// </summary>
     private void LisaaEste()
     {
         Image[] kuvat = new Image[2];
         kuvat[0] = LoadImage("aita");
-        kuvat[1] = LoadImage("zombi");
+        kuvat[1] = LoadImage("zombie");
+        int nopeus = 300;
         
         for (int i = 0; i < 1000; i+=2)
         {
-            este = new PhysicsObject(40, 100);
+            PhysicsObject este = new PhysicsObject(50, 100);
             este.X = RandomGen.NextDouble(600*i,600*(i+1));
             este.Y = -150;
             este.IgnoresPhysicsLogics = true;
@@ -85,35 +98,65 @@ public class Fysiikkapeli1 : PhysicsGame
             este.Mass = 1000;
             este.Tag = "vihu";
             Add(este);
-            este.MoveTo(new Vector(-800, -150), 200);
+            este.MoveTo(new Vector(-800, -150), nopeus);
+            nopeus += 5;
         }
     }
+ 
 
-
+    /// <summary>
+    /// Lisätään peliin näppäinkomennot.
+    /// </summary>
     private void LisaaNappaimet()
     {
         Keyboard.Listen(Key.F1, ButtonState.Pressed, ShowControlHelp, "Näytä ohjeet");
         Keyboard.Listen(Key.Escape, ButtonState.Pressed, ConfirmExit, "Lopeta peli");
-        Keyboard.Listen(Key.Up, ButtonState.Pressed, Hyppaa, "Pelaaja hyppää", pelaaja, HYPPYNOPEUS);
         ControllerOne.Listen(Button.Back, ButtonState.Pressed, Exit, "Poistu pelistä");
     }
+
+    /// <summary>
+    /// Lisätään pelaajalle hyppy.
+    /// </summary>
+    /// <param name="pelaaja">Ohjattava pelaaja.</param>
+    /// <param name="nopeus">Annettu nopeus.</param>
     private void Hyppaa(PlatformCharacter pelaaja, double nopeus)
     {
         pelaaja.Jump(nopeus);
     }
 
+    /// <summary>
+    /// Lisätään näytölle teksti, kun pelaaja osuu esteeseen.
+    /// </summary>
+    /// <param name="pelaaja">Ohjattava pelaaja.</param>
+    /// <param name="este">Objekti, johon pelaaja törmää. Joko zombi tai aita.</param>
     private void PelaajaOsuu(PhysicsObject pelaaja, PhysicsObject este)
     {
        pelaaja.Destroy();
        MessageDisplay.Add("Hävisit pelin!");
+       AloitaAlusta();
     }
 
-  
-    // private void LisaaNopeutta()
-    //{
+    /// <summary>
+    /// Lisätään toiminto, että peli alkaa alusta, kun pelaaja törmää esteeseen.
+    /// </summary>
+    void AloitaAlusta()
+    {
+        ClearAll();
+        MultiSelectWindow alkuValikko = new MultiSelectWindow("Hävisit pelin!",
+        "Yritä Uudelleen", "Lopeta peli");
+        Add(alkuValikko);
+        alkuValikko.AddItemHandler(0, YritaUudelleen);
+        alkuValikko.AddItemHandler(1, Exit);
+    }
 
-    //}
-
-
+    void YritaUudelleen()
+    {
+        Gravity = new Vector(0, -1000);
+        LuoKentta();
+        LisaaPelaaja();
+        LisaaEste();
+        LisaaNappaimet();
+        Camera.StayInLevel = true;
+    }
 
 }
