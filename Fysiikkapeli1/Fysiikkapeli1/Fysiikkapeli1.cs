@@ -17,6 +17,10 @@ using Microsoft.Xna.Framework.Graphics;
 public class Fysiikkapeli1 : PhysicsGame
 {
     private const double HYPPYNOPEUS = 800;
+    private static Image[] ukkelinJuoksu = LoadImages("ukko1", "ukko2", "ukko3", "ukko4");
+    private static Image[] ukkelinHyppy = LoadImages("ukkojump", "ukko1");
+    private Animation juoksuanimaatio = new Animation(ukkelinJuoksu);
+    private Animation hyppyanimaatio = new Animation(ukkelinHyppy);
     public override void Begin()
     {
         MultiSelectWindow alkuValikko = new MultiSelectWindow("Apocalypse Run",
@@ -53,13 +57,15 @@ public class Fysiikkapeli1 : PhysicsGame
     /// </summary>
     private void LisaaPelaaja()
     {
-        PlatformCharacter pelaaja = new PlatformCharacter(50, 50);
+        PlatformCharacter pelaaja = new PlatformCharacter(80, 80);
         pelaaja.X = -250;
         pelaaja.Y = -150;
         pelaaja.Shape = Shape.Circle;
         pelaaja.Restitution = 1.0;
         Add(pelaaja);
         AddCollisionHandler(pelaaja, "vihu", PelaajaOsuu);
+        pelaaja.AnimIdle = juoksuanimaatio;
+        pelaaja.AnimJump = hyppyanimaatio;
         Keyboard.Listen(Key.Space, ButtonState.Pressed, Hyppaa, "Pelaaja hyppää", pelaaja, HYPPYNOPEUS);
     }
 
@@ -84,7 +90,7 @@ public class Fysiikkapeli1 : PhysicsGame
     {
         Image[] kuvat = new Image[2];
         kuvat[0] = LoadImage("aita");
-        kuvat[1] = LoadImage("zombie");
+        kuvat[1] = LoadImage("zombi");
         int nopeus = 300;
         
         for (int i = 0; i < 1000; i+=2)
@@ -100,7 +106,7 @@ public class Fysiikkapeli1 : PhysicsGame
             este.Tag = "vihu";
             Add(este);
             este.MoveTo(new Vector(-800, -150), nopeus);
-            nopeus += 5;
+            nopeus += 4;
         }
     }
  
@@ -164,15 +170,15 @@ public class Fysiikkapeli1 : PhysicsGame
         pisteNaytto.Title = "Pisteet";
         pisteNaytto.BindTo(pisteLaskuri);
         Add(pisteNaytto);
-        pisteLaskuri.AddOverTime(99999, 600);
-        if (pisteLaskuri.Value > 99999)
+        pisteLaskuri.AddOverTime(9999, 300);
+        if (pisteLaskuri.Value > 9999)
         {
             PeliLoppuu();
         }
     }
 
     /// <summary>
-    /// Jos pelaaja saa enemmän kuin 99999 pistettä, niin peli loppuu tällä tavalla.
+    /// Jos pelaaja saa enemmän kuin 9999 pistettä, niin peli loppuu tällä tavalla.
     /// </summary>
     private void PeliLoppuu()
     {
