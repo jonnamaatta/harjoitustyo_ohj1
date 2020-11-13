@@ -34,6 +34,7 @@ public class Fysiikkapeli1 : PhysicsGame
         LisaaEste();
         LisaaNappaimet();
         Camera.StayInLevel = true;
+        LuoPistelaskuri();
     }
 
     /// <summary>
@@ -59,7 +60,7 @@ public class Fysiikkapeli1 : PhysicsGame
         pelaaja.Restitution = 1.0;
         Add(pelaaja);
         AddCollisionHandler(pelaaja, "vihu", PelaajaOsuu);
-        Keyboard.Listen(Key.Up, ButtonState.Pressed, Hyppaa, "Pelaaja hyppää", pelaaja, HYPPYNOPEUS);
+        Keyboard.Listen(Key.Space, ButtonState.Pressed, Hyppaa, "Pelaaja hyppää", pelaaja, HYPPYNOPEUS);
     }
 
     /// <summary>
@@ -139,24 +140,47 @@ public class Fysiikkapeli1 : PhysicsGame
     /// <summary>
     /// Lisätään toiminto, että peli alkaa alusta, kun pelaaja törmää esteeseen.
     /// </summary>
-    void AloitaAlusta()
+    private void AloitaAlusta()
     {
         ClearAll();
         MultiSelectWindow alkuValikko = new MultiSelectWindow("Hävisit pelin!",
         "Yritä Uudelleen", "Lopeta peli");
         Add(alkuValikko);
-        alkuValikko.AddItemHandler(0, YritaUudelleen);
+        alkuValikko.AddItemHandler(0, AloitaPeli);
         alkuValikko.AddItemHandler(1, Exit);
     }
 
-    void YritaUudelleen()
+    /// <summary>
+    /// Luo peliin pistelaskurin.
+    /// </summary>
+    private void LuoPistelaskuri()
     {
-        Gravity = new Vector(0, -1000);
-        LuoKentta();
-        LisaaPelaaja();
-        LisaaEste();
-        LisaaNappaimet();
-        Camera.StayInLevel = true;
+        IntMeter pisteLaskuri = new IntMeter(0, 0, int.MaxValue);
+        Label pisteNaytto = new Label();
+        pisteNaytto.X = Screen.Right - 100;
+        pisteNaytto.Y = Screen.Top - 50;
+        pisteNaytto.TextColor = Color.Black;
+        pisteNaytto.Color = Color.White;
+        pisteNaytto.Title = "Pisteet";
+        pisteNaytto.BindTo(pisteLaskuri);
+        Add(pisteNaytto);
+        pisteLaskuri.AddOverTime(99999, 600);
+        if (pisteLaskuri.Value > 99999)
+        {
+            PeliLoppuu();
+        }
     }
 
+    /// <summary>
+    /// Jos pelaaja saa enemmän kuin 99999 pistettä, niin peli loppuu tällä tavalla.
+    /// </summary>
+    private void PeliLoppuu()
+    {
+        ClearAll();
+        MultiSelectWindow alkuValikko = new MultiSelectWindow("Onnittelut! Sait parhaimman mahdollisen tuloksen.",
+        "Yritä Uudelleen", "Lopeta peli");
+        Add(alkuValikko);
+        alkuValikko.AddItemHandler(0, AloitaPeli);
+        alkuValikko.AddItemHandler(1, Exit);
+    }
 }
